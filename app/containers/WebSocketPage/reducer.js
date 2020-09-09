@@ -9,7 +9,7 @@ import { LOGIN, CHECK_IS_TYPING, CHECK_STOP_TYPING } from './constants';
 export const initialState = {
   user: {
     username: '',
-    status: 0,
+    status: null,
     isLogin: false,
   },
 };

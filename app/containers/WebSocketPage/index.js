@@ -28,11 +28,13 @@ export function WebSocketPage(props) {
   useInjectReducer({ key: 'webSocketPage', reducer });
   useInjectSaga({ key: 'webSocketPage', saga });
   useEffect(() => {
+    const userTyping = {
+      name: user.username,
+      status: user.status,
+    };
     if (user.status > 0) {
-      const userTyping = {
-        username: user.username,
-        status: user.status,
-      };
+      UserTyping(userTyping);
+    } else if (user.status === 0) {
       UserTyping(userTyping);
     }
   }, [user.status]);
