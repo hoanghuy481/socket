@@ -21,7 +21,7 @@ export function* userTyping(action) {
     });
     console.log(repos);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 }
 export default function* webSocketPageSaga() {

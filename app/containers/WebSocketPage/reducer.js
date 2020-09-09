@@ -4,7 +4,12 @@
  *
  */
 import produce from 'immer';
-import { LOGIN, CHECK_IS_TYPING, CHECK_STOP_TYPING } from './constants';
+import {
+  LOGIN,
+  CHECK_IS_TYPING,
+  CHECK_STOP_TYPING,
+  GET_USER_IS_TYPING,
+} from './constants';
 
 export const initialState = {
   user: {
@@ -12,6 +17,7 @@ export const initialState = {
     status: null,
     isLogin: false,
   },
+  usersIsTyping: [],
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -27,6 +33,9 @@ const webSocketPageReducer = (state = initialState, action) =>
         break;
       case CHECK_STOP_TYPING:
         draft.user.status = 0;
+        break;
+      case GET_USER_IS_TYPING:
+        draft.usersIsTyping.push(action.users);
         break;
     }
   });

@@ -21,4 +21,10 @@ const makeSelectUser = () =>
     substate => substate.user,
   );
 
-export { makeSelectUser };
+const makeSelectUsersIsTyping = () =>
+  createSelector(
+    selectWebSocketPageDomain,
+    substate => substate.usersIsTyping,
+  );
+
+export { makeSelectUser, makeSelectUsersIsTyping };

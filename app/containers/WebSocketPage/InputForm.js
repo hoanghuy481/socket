@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { isEmpty as _isEmpty } from 'lodash';
+// import { isEmpty as _isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -8,7 +8,7 @@ const InputForm = ({ isTyping, stopTyping }) => {
   const text = useRef('');
 
   const onChange = () => {
-    if (!_isEmpty(text.current.value)) {
+    if (text.current.value.length > 0) {
       isTyping();
     } else {
       stopTyping();

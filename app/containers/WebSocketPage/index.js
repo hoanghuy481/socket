@@ -15,18 +15,35 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import { makeSelectUser } from './selectors';
-import { actLogin, actIsTyping, actStopTyping, actUserTyping } from './actions';
+import { makeSelectUser, makeSelectUsersIsTyping } from './selectors';
+import {
+  actLogin,
+  actIsTyping,
+  actStopTyping,
+  actUserTyping,
+  actGetUserIsTyping,
+} from './actions';
 import reducer from './reducer';
 import saga from './saga';
 // import messages from './messages';
 import LoginForm from './LoginForm';
 import InputForm from './InputForm';
+
 export function WebSocketPage(props) {
-  const SOCKET_URL = 'http://10.0.2.237:8080/ws-chat/';
-  const { user, login, isTyping, stopTyping, UserTyping } = props;
   useInjectReducer({ key: 'webSocketPage', reducer });
   useInjectSaga({ key: 'webSocketPage', saga });
+
+  const SOCKET_URL = 'http://10.0.2.237:8080/ws-chat/';
+  const {
+    user,
+    login,
+    isTyping,
+    stopTyping,
+    UserTyping,
+    getUsersIsTyping,
+    usersIsTyping,
+  } = props;
+
   useEffect(() => {
     const userTyping = {
       name: user.username,
@@ -38,9 +55,10 @@ export function WebSocketPage(props) {
       UserTyping(userTyping);
     }
   }, [user.status]);
-  const onMessageReceived = msg => {
-    console.log('New Message Received!!', msg);
+  const onMessageReceived = users => {
+    getUsersIsTyping(users);
   };
+  console.log(usersIsTyping);
 
   return (
     <div>
@@ -51,10 +69,10 @@ export function WebSocketPage(props) {
           <SockJsClient
             url={SOCKET_URL}
             topics={['/topic/user_typing']}
-            onConnect={console.log('Connected!!')}
-            onDisconnect={console.log('Disconnected!')}
+            // onConnect={console.log('Connected!!')}
+            // onDisconnect={console.log('Disconnected!')}
             debug={false}
-            onMessage={msg => onMessageReceived(msg)}
+            onMessage={users => onMessageReceived(users)}
           />
           <InputForm isTyping={isTyping} stopTyping={stopTyping} />
         </>
@@ -69,10 +87,13 @@ WebSocketPage.propTypes = {
   isTyping: PropTypes.func,
   stopTyping: PropTypes.func,
   UserTyping: PropTypes.func,
+  getUsersIsTyping: PropTypes.func,
+  usersIsTyping: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
+  usersIsTyping: makeSelectUsersIsTyping(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -88,6 +109,9 @@ function mapDispatchToProps(dispatch) {
     },
     UserTyping: user => {
       dispatch(actUserTyping(user));
+    },
+    getUsersIsTyping: users => {
+      dispatch(actGetUserIsTyping(users));
     },
   };
 }

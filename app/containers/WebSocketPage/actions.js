@@ -9,6 +9,7 @@ import {
   CHECK_IS_TYPING,
   CHECK_STOP_TYPING,
   USER_TYPING,
+  GET_USER_IS_TYPING,
 } from './constants';
 
 export function actLogin(username) {
@@ -32,5 +33,12 @@ export function actUserTyping(user) {
   return {
     type: USER_TYPING,
     user,
+  };
+}
+
+export function actGetUserIsTyping(users) {
+  return {
+    type: GET_USER_IS_TYPING,
+    users,
   };
 }
