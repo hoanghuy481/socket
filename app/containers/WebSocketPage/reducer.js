@@ -35,11 +35,20 @@ const webSocketPageReducer = (state = initialState, action) =>
         draft.user.status = 0;
         break;
       case GET_USER_IS_TYPING:
-        draft.usersIsTyping.forEach(user => {
-          if (action.users.status === 1 && user !== action.users.name) {
-            draft.usersIsTyping.push(action.users.name);
-          }
-        });
+        if (
+          action.users.status === 1 &&
+          draft.user.username !== action.users.name
+        ) {
+          draft.usersIsTyping.push(action.users.name);
+        } else if (
+          action.users.status === 0 &&
+          draft.user.username !== action.users.name
+        ) {
+          draft.usersIsTyping.splice(
+            draft.usersIsTyping.indexOf(action.users.name),
+            1,
+          );
+        }
         break;
     }
   });

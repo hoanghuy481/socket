@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-const InputForm = ({ isTyping, stopTyping }) => {
+const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
   const text = useRef('');
 
   const onChange = () => {
@@ -17,6 +17,7 @@ const InputForm = ({ isTyping, stopTyping }) => {
 
   return (
     <div className="message-input">
+      {usersIsTyping.length > 0 && <p>{usersIsTyping} is Typing</p>}
       <TextField
         className="inputField"
         label="Type your message here..."
@@ -37,6 +38,7 @@ const InputForm = ({ isTyping, stopTyping }) => {
 InputForm.propTypes = {
   isTyping: PropTypes.func,
   stopTyping: PropTypes.func,
+  usersIsTyping: PropTypes.array,
 };
 
 export default InputForm;

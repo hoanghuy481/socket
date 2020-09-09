@@ -58,7 +58,6 @@ export function WebSocketPage(props) {
   const onMessageReceived = users => {
     getUsersIsTyping(users);
   };
-  console.log(usersIsTyping);
 
   return (
     <div>
@@ -74,7 +73,11 @@ export function WebSocketPage(props) {
             debug={false}
             onMessage={users => onMessageReceived(users)}
           />
-          <InputForm isTyping={isTyping} stopTyping={stopTyping} />
+          <InputForm
+            isTyping={isTyping}
+            stopTyping={stopTyping}
+            usersIsTyping={usersIsTyping}
+          />
         </>
       )}
     </div>
