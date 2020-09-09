@@ -4,7 +4,12 @@
  *
  */
 
-import { LOGIN, IS_TYPING, STOP_TYPING } from './constants';
+import {
+  LOGIN,
+  CHECK_IS_TYPING,
+  CHECK_STOP_TYPING,
+  USER_TYPING,
+} from './constants';
 
 export function actLogin(username) {
   return {
@@ -12,16 +17,20 @@ export function actLogin(username) {
     username,
   };
 }
-
-export function actIsTyping(status) {
+export function actIsTyping() {
   return {
-    type: IS_TYPING,
-    status,
+    type: CHECK_IS_TYPING,
   };
 }
-export function actStopTyping(status) {
+export function actStopTyping() {
   return {
-    type: STOP_TYPING,
-    status,
+    type: CHECK_STOP_TYPING,
+  };
+}
+
+export function actUserTyping(user) {
+  return {
+    type: USER_TYPING,
+    user,
   };
 }

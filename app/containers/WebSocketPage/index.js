@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SockJsClient from 'react-stomp';
@@ -16,7 +16,7 @@ import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import { makeSelectUser } from './selectors';
-import { actLogin, actIsTyping, actStopTyping } from './actions';
+import { actLogin, actIsTyping, actStopTyping, actUserTyping } from './actions';
 import reducer from './reducer';
 import saga from './saga';
 // import messages from './messages';
@@ -24,13 +24,18 @@ import LoginForm from './LoginForm';
 import InputForm from './InputForm';
 export function WebSocketPage(props) {
   const SOCKET_URL = 'http://10.0.2.237:8080/ws-chat/';
-  const { user, login } = props;
+  const { user, login, isTyping, stopTyping, UserTyping } = props;
   useInjectReducer({ key: 'webSocketPage', reducer });
   useInjectSaga({ key: 'webSocketPage', saga });
-
-  const handleSubmit = username => {
-    login(username);
-  };
+  useEffect(() => {
+    if (user.status > 0) {
+      const userTyping = {
+        username: user.username,
+        status: user.status,
+      };
+      UserTyping(userTyping);
+    }
+  }, [user.status]);
   const onMessageReceived = msg => {
     console.log('New Message Received!!', msg);
   };
@@ -38,7 +43,7 @@ export function WebSocketPage(props) {
   return (
     <div>
       {!user.isLogin ? (
-        <LoginForm onSubmit={handleSubmit} />
+        <LoginForm onSubmit={login} />
       ) : (
         <>
           <SockJsClient
@@ -49,7 +54,7 @@ export function WebSocketPage(props) {
             debug={false}
             onMessage={msg => onMessageReceived(msg)}
           />
-          <InputForm />
+          <InputForm isTyping={isTyping} stopTyping={stopTyping} />
         </>
       )}
     </div>
@@ -59,6 +64,9 @@ export function WebSocketPage(props) {
 WebSocketPage.propTypes = {
   user: PropTypes.object,
   login: PropTypes.func,
+  isTyping: PropTypes.func,
+  stopTyping: PropTypes.func,
+  UserTyping: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -70,11 +78,14 @@ function mapDispatchToProps(dispatch) {
     login: username => {
       dispatch(actLogin(username));
     },
-    isTyping: status => {
-      dispatch(actIsTyping(status));
+    isTyping: () => {
+      dispatch(actIsTyping());
     },
-    stopTyping: status => {
-      dispatch(actStopTyping(status));
+    stopTyping: () => {
+      dispatch(actStopTyping());
+    },
+    UserTyping: user => {
+      dispatch(actUserTyping(user));
     },
   };
 }

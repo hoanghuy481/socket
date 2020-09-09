@@ -1,14 +1,19 @@
 import React, { useRef } from 'react';
-// import PropTypes from 'prop-types';
+import { isEmpty as _isEmpty } from 'lodash';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-const InputForm = () => {
+const InputForm = ({ isTyping, stopTyping }) => {
   const text = useRef('');
 
-  // const onChange = e => {
-  //   setText(e.target.value);
-  // };
+  const onChange = () => {
+    if (!_isEmpty(text.current.value)) {
+      isTyping();
+    } else {
+      stopTyping();
+    }
+  };
 
   return (
     <div className="message-input">
@@ -19,6 +24,7 @@ const InputForm = () => {
         inputRef={text}
         margin="normal"
         style={{ height: '30px', width: '80%' }}
+        onChange={onChange}
       />
 
       <Button variant="contained" color="primary">
@@ -29,7 +35,8 @@ const InputForm = () => {
 };
 
 InputForm.propTypes = {
-  // onSubmit: PropTypes.func,
+  isTyping: PropTypes.func,
+  stopTyping: PropTypes.func,
 };
 
 export default InputForm;
