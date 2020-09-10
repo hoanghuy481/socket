@@ -20,7 +20,9 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
 
   const handleMouseClick = () => {
     if (!_isEmpty(text.current.value)) {
-      stopTyping();
+      setTimeout(() => {
+        stopTyping();
+      }, 2000);
     }
   };
 
