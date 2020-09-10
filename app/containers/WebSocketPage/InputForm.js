@@ -3,34 +3,39 @@ import { isEmpty as _isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import InputBase from '@material-ui/core/InputBase';
 
 const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
   const text = useRef('');
 
   const onChange = () => {
-    // if (text.current.value.length > 0) {
     if (!_isEmpty(text.current.value)) {
-      console.log('typing');
       isTyping();
     } else {
-      console.log('stop');
       setTimeout(() => {
         stopTyping();
       }, 2000);
     }
   };
 
+  const handleMouseClick = () => {
+    if (!_isEmpty(text.current.value)) {
+      stopTyping();
+    }
+  };
+
   return (
     <div className="message-input">
       {usersIsTyping.length > 0 && <p> {usersIsTyping.join(', ')} is Typing</p>}
-      <TextField
+      <InputBase
+        inputComponent={TextField}
         className="inputField"
         label="Type your message here..."
         placeholder="Enter your message and press ENTER"
         inputRef={text}
-        margin="normal"
         style={{ height: '30px', width: '80%' }}
         onChange={onChange}
+        onBlur={handleMouseClick}
       />
 
       <Button variant="contained" color="primary">
