@@ -11,7 +11,6 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
     if (text.current.value.length > 0) {
       isTyping();
     } else {
-      stopTyping();
       setTimeout(() => {
         stopTyping();
       }, 2000);
@@ -20,7 +19,7 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
 
   return (
     <div className="message-input">
-      <p>{usersIsTyping.length > 0 && usersIsTyping.join(', ')} is Typing</p>
+      {usersIsTyping.length > 0 && <p> {usersIsTyping.join(', ')} is Typing</p>}
       <TextField
         className="inputField"
         label="Type your message here..."
