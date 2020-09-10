@@ -17,7 +17,6 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
       }, 2000);
     }
   };
-
   const handleMouseClick = () => {
     if (!_isEmpty(text.current.value)) {
       setTimeout(() => {
@@ -25,7 +24,11 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
       }, 2000);
     }
   };
-
+  const handleFocus = () => {
+    if (!_isEmpty(text.current.value)) {
+      isTyping();
+    }
+  };
   return (
     <div className="message-input">
       {usersIsTyping.length > 0 && <p> {usersIsTyping.join(', ')} is Typing</p>}
@@ -38,6 +41,7 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
         style={{ height: '30px', width: '80%' }}
         onChange={onChange}
         onBlur={handleMouseClick}
+        onFocus={handleFocus}
       />
 
       <Button variant="contained" color="primary">
