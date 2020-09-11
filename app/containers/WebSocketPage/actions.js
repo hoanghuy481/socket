@@ -4,13 +4,7 @@
  *
  */
 
-import {
-  LOGIN,
-  CHECK_IS_TYPING,
-  CHECK_STOP_TYPING,
-  USER_TYPING,
-  GET_USER_IS_TYPING,
-} from './constants';
+import { LOGIN, USER_TYPING, GET_USERS_IS_TYPING } from './constants';
 
 export function actLogin(username) {
   return {
@@ -18,27 +12,16 @@ export function actLogin(username) {
     username,
   };
 }
-export function actIsTyping() {
-  return {
-    type: CHECK_IS_TYPING,
-  };
-}
-export function actStopTyping() {
-  return {
-    type: CHECK_STOP_TYPING,
-  };
-}
-
-export function actUserTyping(user) {
+export function actUserTyping(status) {
   return {
     type: USER_TYPING,
-    user,
+    status,
   };
 }
 
 export function actGetUserIsTyping(users) {
   return {
-    type: GET_USER_IS_TYPING,
+    type: GET_USERS_IS_TYPING,
     users,
   };
 }

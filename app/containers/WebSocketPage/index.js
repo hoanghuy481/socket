@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SockJsClient from 'react-stomp';
@@ -16,13 +16,7 @@ import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import { makeSelectUser, makeSelectUsersIsTyping } from './selectors';
-import {
-  actLogin,
-  actIsTyping,
-  actStopTyping,
-  actUserTyping,
-  actGetUserIsTyping,
-} from './actions';
+import { actLogin, actUserTyping, actGetUserIsTyping } from './actions';
 import reducer from './reducer';
 import saga from './saga';
 // import messages from './messages';
@@ -34,27 +28,8 @@ export function WebSocketPage(props) {
   useInjectSaga({ key: 'webSocketPage', saga });
 
   const SOCKET_URL = 'http://10.0.2.237:8080/ws-chat/';
-  const {
-    user,
-    login,
-    isTyping,
-    stopTyping,
-    UserTyping,
-    getUsersIsTyping,
-    usersIsTyping,
-  } = props;
+  const { user, login, userTyping, getUsersIsTyping, usersIsTyping } = props;
 
-  useEffect(() => {
-    const userTyping = {
-      name: user.username,
-      status: user.status,
-    };
-    if (user.status > 0) {
-      UserTyping(userTyping);
-    } else if (user.status === 0) {
-      UserTyping(userTyping);
-    }
-  }, [user.status]);
   const onMessageReceived = users => {
     getUsersIsTyping(users);
   };
@@ -67,15 +42,15 @@ export function WebSocketPage(props) {
         <>
           <SockJsClient
             url={SOCKET_URL}
-            topics={['/topic/user_typing']}
-            // onConnect={console.log('Connected!!')}
-            // onDisconnect={console.log('Disconnected!')}
+            topics={['/topic/user_typing']} /* url room */
             debug={false}
+            onConnect={console.log('Connected!!')}
+            onDisconnect={console.log('Disconnected!')}
             onMessage={users => onMessageReceived(users)}
           />
           <InputForm
-            isTyping={isTyping}
-            stopTyping={stopTyping}
+            user={user}
+            userTyping={userTyping}
             usersIsTyping={usersIsTyping}
           />
         </>
@@ -87,9 +62,7 @@ export function WebSocketPage(props) {
 WebSocketPage.propTypes = {
   user: PropTypes.object,
   login: PropTypes.func,
-  isTyping: PropTypes.func,
-  stopTyping: PropTypes.func,
-  UserTyping: PropTypes.func,
+  userTyping: PropTypes.func,
   getUsersIsTyping: PropTypes.func,
   usersIsTyping: PropTypes.array,
 };
@@ -104,14 +77,8 @@ function mapDispatchToProps(dispatch) {
     login: username => {
       dispatch(actLogin(username));
     },
-    isTyping: () => {
-      dispatch(actIsTyping());
-    },
-    stopTyping: () => {
-      dispatch(actStopTyping());
-    },
-    UserTyping: user => {
-      dispatch(actUserTyping(user));
+    userTyping: status => {
+      dispatch(actUserTyping(status));
     },
     getUsersIsTyping: users => {
       dispatch(actGetUserIsTyping(users));

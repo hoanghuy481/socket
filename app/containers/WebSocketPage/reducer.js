@@ -4,17 +4,12 @@
  *
  */
 import produce from 'immer';
-import {
-  LOGIN,
-  CHECK_IS_TYPING,
-  CHECK_STOP_TYPING,
-  GET_USER_IS_TYPING,
-} from './constants';
+import { LOGIN, USER_TYPING, GET_USERS_IS_TYPING } from './constants';
 
 export const initialState = {
   user: {
     username: '',
-    status: null,
+    status: 0,
     isLogin: false,
   },
   usersIsTyping: [],
@@ -28,13 +23,11 @@ const webSocketPageReducer = (state = initialState, action) =>
         draft.user.username = action.username;
         draft.user.isLogin = true;
         break;
-      case CHECK_IS_TYPING:
-        draft.user.status = 1;
+      case USER_TYPING:
+        draft.user.status = action.status;
+        action.user = { ...draft.user };
         break;
-      case CHECK_STOP_TYPING:
-        draft.user.status = 0;
-        break;
-      case GET_USER_IS_TYPING:
+      case GET_USERS_IS_TYPING:
         if (
           action.users.status === 1 &&
           draft.user.username !== action.users.name

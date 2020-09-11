@@ -9,7 +9,10 @@ import request from '../../utils/request';
 // Get Detail App
 export function* userTyping(action) {
   try {
-    const body = action.user;
+    const body = {
+      name: action.user.username,
+      status: action.user.status,
+    };
     const requestUrl = 'http://10.0.2.237:8080/api/usertyping';
     const repos = yield call(request, requestUrl, {
       method: 'POST',

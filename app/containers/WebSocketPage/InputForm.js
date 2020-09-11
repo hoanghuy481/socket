@@ -5,28 +5,29 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 
-const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
+const InputForm = ({ user, userTyping, usersIsTyping }) => {
   const text = useRef('');
-
   const onChange = () => {
     if (!_isEmpty(text.current.value)) {
-      isTyping();
+      if (user.status === 0) {
+        userTyping(1);
+      }
     } else {
       setTimeout(() => {
-        stopTyping();
+        userTyping(0);
       }, 2000);
     }
   };
-  const handleMouseClick = () => {
+  const handleMouseClickOut = () => {
     if (!_isEmpty(text.current.value)) {
       setTimeout(() => {
-        stopTyping();
+        userTyping(0);
       }, 2000);
     }
   };
-  const handleFocus = () => {
+  const handleMouseClickFocus = () => {
     if (!_isEmpty(text.current.value)) {
-      isTyping();
+      userTyping(1);
     }
   };
   return (
@@ -40,8 +41,8 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
         inputRef={text}
         style={{ height: '30px', width: '80%' }}
         onChange={onChange}
-        onBlur={handleMouseClick}
-        onFocus={handleFocus}
+        onBlur={handleMouseClickOut}
+        onFocus={handleMouseClickFocus}
       />
 
       <Button variant="contained" color="primary">
@@ -52,9 +53,9 @@ const InputForm = ({ isTyping, stopTyping, usersIsTyping }) => {
 };
 
 InputForm.propTypes = {
-  isTyping: PropTypes.func,
-  stopTyping: PropTypes.func,
+  userTyping: PropTypes.func,
   usersIsTyping: PropTypes.array,
+  user: PropTypes.object,
 };
 
 export default InputForm;
